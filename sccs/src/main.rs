@@ -2,9 +2,9 @@ use std::cmp;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Error};
 
+use counter::Counter;
 use std::collections::{HashMap, HashSet};
 use std::str::FromStr;
-use counter::Counter;
 
 use std::thread;
 
@@ -42,18 +42,24 @@ fn exec(file_name: &str) -> String {
 }
 
 fn aggregate(leaders: &Vec<i32>) -> String {
-    let score = leaders.into_iter().collect::<Counter<_>>().most_common_ordered();
+    let score = leaders
+        .into_iter()
+        .collect::<Counter<_>>()
+        .most_common_ordered();
     if score.len() > 5 {
-        return score.iter()
+        return score
+            .iter()
             .take(5)
             .map(|&elem| elem.1.to_string())
-            .collect::<Vec<_>>().join(",");
+            .collect::<Vec<_>>()
+            .join(",");
     }
 
-    let mut res = score.iter()
+    let mut res = score
+        .iter()
         .map(|&elem| elem.1.to_string())
         .collect::<Vec<_>>();
-    let rest = vec!["0".to_owned(); 5-score.len()];
+    let rest = vec!["0".to_owned(); 5 - score.len()];
     res.append(&mut rest.to_owned());
 
     res.join(",")
@@ -69,7 +75,15 @@ fn dfs_loop(graph: &Graph, node_num: &i32, order: &HashMap<i32, i32>) -> (Vec<i3
         let node = order.get(&i).unwrap();
         if !explored.contains(&node) {
             let s = *node;
-            dfs(&graph, &node, &mut explored, &mut leaders, &mut finishing_times, &mut t, &s);
+            dfs(
+                &graph,
+                &node,
+                &mut explored,
+                &mut leaders,
+                &mut finishing_times,
+                &mut t,
+                &s,
+            );
         }
     }
 
@@ -92,7 +106,7 @@ fn dfs(
             if !explored.contains(neighbor) {
                 dfs(graph, neighbor, explored, leaders, finishing_times, t, s);
             }
-        }   
+        }
     }
     finishing_times[*node as usize] = *t;
     *t += 1;
@@ -115,20 +129,14 @@ fn read_file(file_name: String) -> Result<(Graph, Graph, i32), Error> {
         let head = head_1indexed - 1;
 
         max = cmp::max(tail, max);
-        if !graph.contains_key(&tail) {
-            graph.insert(tail, vec![]);
-        }
-        let g = graph.get_mut(&tail).unwrap();
+        let g = graph.entry(tail).or_insert(vec![]);
         g.push(head);
 
-        if !reversed_graph.contains_key(&head) {
-            reversed_graph.insert(head, vec![]);
-        }
-        let r_g = reversed_graph.get_mut(&head).unwrap();
+        let r_g = reversed_graph.entry(head).or_insert(vec![]);
         r_g.push(tail);
     }
 
-    Ok((graph, reversed_graph, max+1))
+    Ok((graph, reversed_graph, max + 1))
 }
 
 #[cfg(test)]
