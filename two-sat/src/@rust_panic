@@ -1,0 +1,22 @@
+; id = {0x000007d3}, range = [0x0000000000086500-0x0000000000086570), name="rust_panic"
+; Source location: /rustc/e1884a8e3c3e813aada8254edfa120e85bf5ffca/library/std/src/panicking.rs:639
+5555555DA500: 48 83 EC 58                subq   $0x58, %rsp
+5555555DA504: 48 89 7C 24 08             movq   %rdi, 0x8(%rsp)
+5555555DA509: 48 89 74 24 10             movq   %rsi, 0x10(%rsp)
+5555555DA50E: 48 8D 7C 24 08             leaq   0x8(%rsp), %rdi
+5555555DA513: FF 15 67 BE 03 00          callq  *0x3be67(%rip)
+5555555DA519: 89 44 24 04                movl   %eax, 0x4(%rsp)
+5555555DA51D: 48 8D 44 24 04             leaq   0x4(%rsp), %rax
+5555555DA522: 48 89 44 24 18             movq   %rax, 0x18(%rsp)
+5555555DA527: 48 8D 05 02 A6 01 00       leaq   0x1a602(%rip), %rax  ; fmt at num.rs:279
+5555555DA52E: 48 89 44 24 20             movq   %rax, 0x20(%rsp)
+5555555DA533: 48 8D 05 FE A2 03 00       leaq   0x3a2fe(%rip), %rax
+5555555DA53A: 48 89 44 24 28             movq   %rax, 0x28(%rsp)
+5555555DA53F: 48 C7 44 24 30 01 00 00 >  movq   $0x1, 0x30(%rsp)
+5555555DA548: 48 C7 44 24 38 00 00 00 >  movq   $0x0, 0x38(%rsp)
+5555555DA551: 48 8D 44 24 18             leaq   0x18(%rsp), %rax
+5555555DA556: 48 89 44 24 48             movq   %rax, 0x48(%rsp)
+5555555DA55B: 48 C7 44 24 50 01 00 00 >  movq   $0x1, 0x50(%rsp)
+5555555DA564: 48 8D 7C 24 28             leaq   0x28(%rsp), %rdi
+5555555DA569: E8 52 ED FF FF             callq  0x5555555d92c0  ; abort at util.rs:17
+5555555DA56E: 0F 0B                      ud2    
